@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 
 class SecondFragment : Fragment() {
@@ -32,13 +33,16 @@ class SecondFragment : Fragment() {
         result?.text = generate(min, max).toString()
 
         backButton?.setOnClickListener {
-            // TODO: implement back
+
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.container,FirstFragment.newInstance(result?.text.toString().toInt()))
+                .commit()
         }
     }
 
     private fun generate(min: Int, max: Int): Int {
-        // TODO: generate random number
-        return 0
+        return (min + Math.random() * (max - min + 1)).toInt()
     }
 
     companion object {
@@ -46,10 +50,7 @@ class SecondFragment : Fragment() {
         @JvmStatic
         fun newInstance(min: Int, max: Int): SecondFragment {
             val fragment = SecondFragment()
-            val args = Bundle()
-
-            // TODO: implement adding arguments
-
+            fragment.arguments = bundleOf(MIN_VALUE_KEY to min, MAX_VALUE_KEY to max)
             return fragment
         }
 
