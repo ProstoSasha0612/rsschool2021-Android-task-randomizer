@@ -1,11 +1,13 @@
 package com.rsschool.android2021
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 
@@ -13,6 +15,19 @@ class SecondFragment : Fragment() {
 
     private var backButton: Button? = null
     private var result: TextView? = null
+    private lateinit var fragmentSendDataListener:OnFragmentSendNumber
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this){
+            fragmentSendDataListener.sendNumber(result?.text.toString().toInt())
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fragmentSendDataListener = context as OnFragmentSendNumber
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,11 +48,7 @@ class SecondFragment : Fragment() {
         result?.text = generate(min, max).toString()
 
         backButton?.setOnClickListener {
-
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.container,FirstFragment.newInstance(result?.text.toString().toInt()))
-                .commit()
+            fragmentSendDataListener.sendNumber(result?.text.toString().toInt())
         }
     }
 
@@ -56,5 +67,6 @@ class SecondFragment : Fragment() {
 
         private const val MIN_VALUE_KEY = "MIN_VALUE"
         private const val MAX_VALUE_KEY = "MAX_VALUE"
+        const val TAG = "Second Fragment"
     }
 }
