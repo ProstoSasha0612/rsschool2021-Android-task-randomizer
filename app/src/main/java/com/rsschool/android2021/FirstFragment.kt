@@ -18,6 +18,7 @@ class FirstFragment : Fragment() {
     private var previousResult: TextView? = null
     private lateinit var editTextMin: EditText
     private lateinit var editTextMax: EditText
+    private lateinit var fragmentSendMinMax: OnFragmentSendMinMax
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,12 +28,17 @@ class FirstFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_first, container, false)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fragmentSendMinMax = context as OnFragmentSendMinMax
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         previousResult = view.findViewById(R.id.previous_result)
         generateButton = view.findViewById(R.id.generate)
         editTextMin = view.findViewById(R.id.min_value)
         editTextMax = view.findViewById(R.id.max_value)
+
 
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
@@ -41,11 +47,7 @@ class FirstFragment : Fragment() {
             val min: Int = if(editTextMin.text.isNotEmpty()) editTextMin.text.toString().toInt() else 0
             val max: Int = if(editTextMax.text.isNotEmpty()) editTextMax.text.toString().toInt() else 0
 
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, SecondFragment.newInstance(min, max))
-                .addToBackStack("SecondFragment")
-                .commit()
+            fragmentSendMinMax.sendMinMax(min,max)
         }
 
         val textWatcher = object : TextWatcher{

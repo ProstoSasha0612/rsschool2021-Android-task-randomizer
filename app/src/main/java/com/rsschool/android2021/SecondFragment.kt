@@ -15,18 +15,18 @@ class SecondFragment : Fragment() {
 
     private var backButton: Button? = null
     private var result: TextView? = null
-    private lateinit var fragmentSendDataListener:OnFragmentSendNumber
+    private lateinit var fragmentSendData:OnFragmentSendNumber
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this){
-            fragmentSendDataListener.sendNumber(result?.text.toString().toInt())
+            fragmentSendData.sendNumber(result?.text.toString().toInt())
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        fragmentSendDataListener = context as OnFragmentSendNumber
+        fragmentSendData = context as OnFragmentSendNumber
     }
 
     override fun onCreateView(
@@ -48,7 +48,7 @@ class SecondFragment : Fragment() {
         result?.text = generate(min, max).toString()
 
         backButton?.setOnClickListener {
-            fragmentSendDataListener.sendNumber(result?.text.toString().toInt())
+            fragmentSendData.sendNumber(result?.text.toString().toInt())
         }
     }
 
